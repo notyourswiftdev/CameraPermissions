@@ -10,10 +10,13 @@ import AVFoundation
 
 class ViewController: UIViewController {
     
-    let chooseImageViewHeight: CGFloat = 80
-    
+    // MARK: - Properties -
+    var imageSelection = UIImage()
     let imagePicker = UIImagePickerController()
-    let chooseImageLabel: UILabel = {
+    
+    let chooseImageViewHeight: CGFloat = 200
+    
+    lazy var chooseImageLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Choose an Image"
@@ -21,34 +24,35 @@ class ViewController: UIViewController {
         return label
     }()
     
-    lazy var  chooseImageView: UIImageView = {
-        let imageView = UIImageView(frame: .zero)
+    lazy var chooseImageView: UIImageView = {
+        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = true
         imageView.layer.borderWidth = 1
         imageView.layer.borderColor = UIColor.blue.cgColor
-        
-        let tapGestureRecognizer = UIGestureRecognizer(target: self, action: #selector(chooseImageAction))
-        imageView.isUserInteractionEnabled = true
-        imageView.addGestureRecognizer(tapGestureRecognizer)
         return imageView
     }()
+    
+    lazy var pictureSelectionTapGesture = UITapGestureRecognizer(target: self, action: #selector(chooseImageAction))
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         configureUI()
-        delegates()
     }
     
     // MARK: - Helper Functions -
-    func delegates() {
-        imagePicker.delegate = self
-    }
-    
     func imagePickerSelection() {
+        imagePicker.delegate = self
         imagePicker.isEditing = false
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func configureUI() {
+        constraints()
+        // adds gesture to imageview
+        chooseImageView.addGestureRecognizer(pictureSelectionTapGesture)
     }
     
     // MARK: - Actions -
@@ -58,7 +62,7 @@ class ViewController: UIViewController {
 }
 
 extension ViewController {
-    func configureUI() {
+    func constraints() {
         view.addSubview(chooseImageLabel)
         NSLayoutConstraint.activate([
             chooseImageLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
