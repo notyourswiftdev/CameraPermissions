@@ -11,7 +11,7 @@ class ViewController: UIViewController {
     
     let chooseImageViewHeight: CGFloat = 80
     
-    let chooseImageTitle: UILabel = {
+    let chooseImageLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Choose an Image"
@@ -31,16 +31,16 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        view.addSubview(chooseImageTitle)
+        view.addSubview(chooseImageLabel)
         NSLayoutConstraint.activate([
-            chooseImageTitle.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            chooseImageTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            chooseImageLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            chooseImageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         view.addSubview(chooseImageView)
         NSLayoutConstraint.activate([
-            chooseImageView.centerYAnchor.constraint(equalTo: chooseImageTitle.centerYAnchor),
-            chooseImageView.centerXAnchor.constraint(equalTo: chooseImageTitle.centerXAnchor),
+            chooseImageView.centerYAnchor.constraint(equalTo: chooseImageLabel.centerYAnchor),
+            chooseImageView.centerXAnchor.constraint(equalTo: chooseImageLabel.centerXAnchor),
             chooseImageView.heightAnchor.constraint(equalToConstant: chooseImageViewHeight),
             chooseImageView.widthAnchor.constraint(equalToConstant: chooseImageViewHeight)
         ])
