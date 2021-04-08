@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
     let chooseImageViewHeight: CGFloat = 80
     
+    let imagePicker = UIImagePickerController()
     let chooseImageLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -19,18 +21,44 @@ class ViewController: UIViewController {
         return label
     }()
     
-    let chooseImageView: UIImageView = {
-        let imageView = UIImageView()
+    lazy var  chooseImageView: UIImageView = {
+        let imageView = UIImageView(frame: .zero)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.borderWidth = 1
         imageView.layer.borderColor = UIColor.blue.cgColor
+        
+        let tapGestureRecognizer = UIGestureRecognizer(target: self, action: #selector(chooseImageAction))
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tapGestureRecognizer)
         return imageView
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
+        configureUI()
+        delegates()
+    }
+    
+    // MARK: - Helper Functions -
+    func delegates() {
+        imagePicker.delegate = self
+    }
+    
+    func imagePickerSelection() {
+        imagePicker.isEditing = false
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    // MARK: - Actions -
+    @objc func chooseImageAction() {
+        imagePickerSelection()
+    }
+}
+
+extension ViewController {
+    func configureUI() {
         view.addSubview(chooseImageLabel)
         NSLayoutConstraint.activate([
             chooseImageLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -45,7 +73,7 @@ class ViewController: UIViewController {
             chooseImageView.widthAnchor.constraint(equalToConstant: chooseImageViewHeight)
         ])
     }
-
-
 }
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {}
 
