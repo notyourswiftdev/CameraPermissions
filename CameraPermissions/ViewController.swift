@@ -42,22 +42,54 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Helper Functions -
-    func imagePickerSelection() {
-        imagePicker.delegate = self
-        imagePicker.isEditing = false
-        imagePicker.sourceType = .photoLibrary
-        present(imagePicker, animated: true, completion: nil)
-    }
-    
     func configureUI() {
         constraints()
         // adds gesture to imageview
         chooseImageView.addGestureRecognizer(pictureSelectionTapGesture)
     }
     
+    func checkCameraAuthorization() {
+        let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        switch cameraAuthorizationStatus {
+        case .notDetermined:
+            requestCameraPermission()
+        case .authorized:
+            presentCamera()
+        case .denied, .restricted:
+            alertCameraAccessNeeded()
+        }
+    }
+    
+    func requestCameraPermission() {
+        AVCaptureDevice.requestAccess(for: .video) { (cameraGranted) in
+            guard cameraGranted == true else { return }
+            self.presentCamera()
+        }
+    }
+    
+    func presentCamera() {
+        DispatchQueue.main.async {
+            let photoPicker = UIImagePickerController()
+            photoPicker.sourceType = .camera
+            photoPicker.allowsEditing = false
+            photoPicker.delegate = self
+            self.present(photoPicker, animated: true, completion: nil)
+        }
+    }
+    
+    func alertCameraAccessNeeded() {
+        let settingsAppURL = URL(string: UIApplication.openSettingsURLString)!
+        let alert = UIAlertController(title: "Need Camera Access", message: "Camera access is required to make full use of this app.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Allow Camera", style: .cancel, handler: { (alert) in
+            UIApplication.shared.open(settingsAppURL, options: [:], completionHandler: nil)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: - Actions -
     @objc func chooseImageAction() {
-        imagePickerSelection()
+        checkCameraAuthorization()
     }
 }
 
