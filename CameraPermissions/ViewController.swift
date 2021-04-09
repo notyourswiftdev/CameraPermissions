@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     var imageSelection = UIImage()
     let photoPicker = UIImagePickerController()
     
-    let chooseImageViewHeight: CGFloat = 200
+    let chooseImageViewHeight: CGFloat = 100
     
     lazy var chooseImageLabel: UILabel = {
         let label = UILabel()
@@ -34,6 +34,15 @@ class ViewController: UIViewController {
     }()
     
     lazy var pictureSelectionTapGesture = UITapGestureRecognizer(target: self, action: #selector(chooseImageAction))
+    
+    lazy var largerImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = true
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.blue.cgColor
+        return imageView
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,7 +79,7 @@ class ViewController: UIViewController {
     func presentCamera() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.photoPicker.sourceType = .camera
+            self.photoPicker.sourceType = .photoLibrary
             self.photoPicker.allowsEditing = false
             self.photoPicker.delegate = self
             self.present(self.photoPicker, animated: true, completion: nil)
@@ -89,7 +98,7 @@ class ViewController: UIViewController {
     
     // MARK: - Actions -
     @objc func chooseImageAction() {
-        if photoPicker.sourceType == .camera {
+        if photoPicker.sourceType == .photoLibrary {
             checkCameraAuthorization()
         } else {
             DispatchQueue.main.async {
@@ -116,8 +125,23 @@ extension ViewController {
             chooseImageView.heightAnchor.constraint(equalToConstant: chooseImageViewHeight),
             chooseImageView.widthAnchor.constraint(equalToConstant: chooseImageViewHeight)
         ])
+        
+        view.addSubview(largerImageView)
+        NSLayoutConstraint.activate([
+            largerImageView.topAnchor.constraint(equalTo: chooseImageView.bottomAnchor, constant: 10),
+            largerImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            largerImageView.heightAnchor.constraint(equalToConstant: 150),
+            largerImageView.widthAnchor.constraint(equalToConstant: 150),
+        ])
     }
 }
 
-extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {}
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let photo = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        chooseImageView.image = photo
+        largerImageView.image = photo
+        dismiss(animated: true, completion: nil)
+    }
+}
 
