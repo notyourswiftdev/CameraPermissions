@@ -93,7 +93,7 @@ class ViewController: UIViewController {
             checkCameraAuthorization()
         } else {
             DispatchQueue.main.async {
-                let alert = UIAlertController(title: "Oops!", message: "Couldn't access a camera at this time. Can you check that your device has a camer?", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Oops!", message: "Couldn't access a camera at this time. Can you check that your device has a camera?", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
