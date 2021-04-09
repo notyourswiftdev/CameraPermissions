@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     // MARK: - Properties -
     var imageSelection = UIImage()
-    let imagePicker = UIImagePickerController()
+    let photoPicker = UIImagePickerController()
     
     let chooseImageViewHeight: CGFloat = 200
     
@@ -68,12 +68,12 @@ class ViewController: UIViewController {
     }
     
     func presentCamera() {
-        DispatchQueue.main.async {
-            let photoPicker = UIImagePickerController()
-            photoPicker.sourceType = .camera
-            photoPicker.allowsEditing = false
-            photoPicker.delegate = self
-            self.present(photoPicker, animated: true, completion: nil)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.photoPicker.sourceType = .camera
+            self.photoPicker.allowsEditing = false
+            self.photoPicker.delegate = self
+            self.present(self.photoPicker, animated: true, completion: nil)
         }
     }
     
@@ -89,7 +89,15 @@ class ViewController: UIViewController {
     
     // MARK: - Actions -
     @objc func chooseImageAction() {
-        checkCameraAuthorization()
+        if photoPicker.sourceType == .camera {
+            checkCameraAuthorization()
+        } else {
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Oops!", message: "Couldn't access a camera at this time. Can you check that your device has a camer?", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
     }
 }
 
