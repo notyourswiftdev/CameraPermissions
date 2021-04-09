@@ -11,8 +11,7 @@ import AVFoundation
 class ViewController: UIViewController {
     
     // MARK: - Properties -
-    var imageSelection = UIImage()
-    let photoPicker = UIImagePickerController()
+    let imagePicker = UIImagePickerController()
     
     let chooseImageViewHeight: CGFloat = 100
     
@@ -43,17 +42,17 @@ class ViewController: UIViewController {
         imageView.layer.borderColor = UIColor.blue.cgColor
         return imageView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         configureUI()
+        checkCameraAuthorization()
     }
     
     // MARK: - Helper Functions -
     func configureUI() {
         constraints()
-        // adds gesture to imageview
         chooseImageView.addGestureRecognizer(pictureSelectionTapGesture)
     }
     
@@ -63,7 +62,7 @@ class ViewController: UIViewController {
         case .notDetermined:
             requestCameraPermission()
         case .authorized:
-            presentCamera()
+            return
         case .denied, .restricted:
             alertCameraAccessNeeded()
         @unknown default:
@@ -77,14 +76,24 @@ class ViewController: UIViewController {
         }
     }
     
-    func presentCamera() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.photoPicker.sourceType = .camera
-            self.photoPicker.allowsEditing = false
-            self.photoPicker.delegate = self
-            self.present(self.photoPicker, animated: true, completion: nil)
+    func openCamera() {
+        if (UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)) {
+            imagePicker.sourceType = .camera
+            imagePicker.allowsEditing = true
+            imagePicker.delegate = self
+            self.present(imagePicker, animated: true, completion: nil)
+        } else {
+            let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func openGallary() {
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.allowsEditing = false
+        imagePicker.delegate = self
+        self.present(imagePicker, animated: true, completion: nil)
     }
     
     func alertCameraAccessNeeded() {
@@ -99,13 +108,18 @@ class ViewController: UIViewController {
     
     // MARK: - Actions -
     @objc func chooseImageAction() {
-        if photoPicker.sourceType == .camera {
-            presentCamera()
-        } else {
-            let alert = UIAlertController(title: "Oops!", message: "Couldn't access a camera at this time. Can you check that your device has a camera?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-            present(alert, animated: true, completion: nil)
-        }
+        checkCameraAuthorization()
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { _ in
+            self.openCamera()
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { _ in
+            self.openGallary()
+        }))
+        
+        alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
