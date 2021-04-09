@@ -66,20 +66,21 @@ class ViewController: UIViewController {
             presentCamera()
         case .denied, .restricted:
             alertCameraAccessNeeded()
+        @unknown default:
+            fatalError()
         }
     }
     
     func requestCameraPermission() {
         AVCaptureDevice.requestAccess(for: .video) { (cameraGranted) in
             guard cameraGranted == true else { return }
-            self.presentCamera()
         }
     }
     
     func presentCamera() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.photoPicker.sourceType = .photoLibrary
+            self.photoPicker.sourceType = .camera
             self.photoPicker.allowsEditing = false
             self.photoPicker.delegate = self
             self.present(self.photoPicker, animated: true, completion: nil)
@@ -98,14 +99,12 @@ class ViewController: UIViewController {
     
     // MARK: - Actions -
     @objc func chooseImageAction() {
-        if photoPicker.sourceType == .photoLibrary {
-            checkCameraAuthorization()
+        if photoPicker.sourceType == .camera {
+            presentCamera()
         } else {
-            DispatchQueue.main.async {
-                let alert = UIAlertController(title: "Oops!", message: "Couldn't access a camera at this time. Can you check that your device has a camera?", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
+            let alert = UIAlertController(title: "Oops!", message: "Couldn't access a camera at this time. Can you check that your device has a camera?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
     }
 }
