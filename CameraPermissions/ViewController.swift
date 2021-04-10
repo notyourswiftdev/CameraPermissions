@@ -13,13 +13,16 @@ class ViewController: UIViewController {
     // MARK: - Properties -
     let imagePicker = UIImagePickerController()
     
-    let chooseImageViewHeight: CGFloat = 100
+    let thumbnailSize: CGFloat = 80
+    let mainImageSize: CGFloat = 200
     
     lazy var chooseImageLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Choose an Image"
-        label.font = .boldSystemFont(ofSize: 16)
+        label.text = "Choose \nImage"
+        label.font = .boldSystemFont(ofSize: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
         return label
     }()
     
@@ -27,8 +30,8 @@ class ViewController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = true
-        imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.blue.cgColor
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -37,9 +40,10 @@ class ViewController: UIViewController {
     lazy var largerImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
         imageView.isUserInteractionEnabled = true
-        imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.blue.cgColor
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -79,7 +83,7 @@ class ViewController: UIViewController {
     func openCamera() {
         if (UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)) {
             imagePicker.sourceType = .camera
-            imagePicker.allowsEditing = true
+            imagePicker.allowsEditing = false
             imagePicker.delegate = self
             self.present(imagePicker, animated: true, completion: nil)
         } else {
@@ -127,24 +131,26 @@ extension ViewController {
     func constraints() {
         view.addSubview(chooseImageLabel)
         NSLayoutConstraint.activate([
-            chooseImageLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            chooseImageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+//            chooseImageLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+//            chooseImageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            chooseImageLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            chooseImageLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 40)
         ])
         
         view.addSubview(chooseImageView)
         NSLayoutConstraint.activate([
             chooseImageView.centerYAnchor.constraint(equalTo: chooseImageLabel.centerYAnchor),
             chooseImageView.centerXAnchor.constraint(equalTo: chooseImageLabel.centerXAnchor),
-            chooseImageView.heightAnchor.constraint(equalToConstant: chooseImageViewHeight),
-            chooseImageView.widthAnchor.constraint(equalToConstant: chooseImageViewHeight)
+            chooseImageView.heightAnchor.constraint(equalToConstant: thumbnailSize),
+            chooseImageView.widthAnchor.constraint(equalToConstant: thumbnailSize)
         ])
         
         view.addSubview(largerImageView)
         NSLayoutConstraint.activate([
-            largerImageView.topAnchor.constraint(equalTo: chooseImageView.bottomAnchor, constant: 10),
-            largerImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            largerImageView.heightAnchor.constraint(equalToConstant: 150),
-            largerImageView.widthAnchor.constraint(equalToConstant: 150),
+            largerImageView.topAnchor.constraint(equalTo: chooseImageView.bottomAnchor, constant: 20),
+            largerImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            largerImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            largerImageView.heightAnchor.constraint(equalToConstant: mainImageSize)
         ])
     }
 }
