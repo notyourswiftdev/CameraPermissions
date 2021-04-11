@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         return label
     }()
     
-    lazy var chooseImageView: UIImageView = {
+    lazy var thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     
     lazy var pictureSelectionTapGesture = UITapGestureRecognizer(target: self, action: #selector(chooseImageAction))
     
-    lazy var largerImageView: UIImageView = {
+    lazy var mainImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -59,7 +59,7 @@ class ViewController: UIViewController {
     // MARK: - Helper Functions -
     func configureUI() {
         constraints()
-        chooseImageView.addGestureRecognizer(pictureSelectionTapGesture)
+        thumbnailImageView.addGestureRecognizer(pictureSelectionTapGesture)
     }
     
     func checkCameraAuthorization() {
@@ -116,14 +116,19 @@ class ViewController: UIViewController {
     @objc func chooseImageAction() {
         checkCameraAuthorization()
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { _ in
-            self.openCamera()
-        }))
         
-        alert.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { _ in
+        if mainImageView.image == nil {
+            alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (_) in
+                self.openCamera()
+            }))
+        } else {
+            alert.addAction(UIAlertAction(title: "Choose Filter", style: .default, handler: { (_) in
+                print("Open FilterViewController with Image")
+            }))
+        }
+        alert.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { (_) in
             self.openGallary()
         }))
-        
         alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
@@ -131,26 +136,26 @@ class ViewController: UIViewController {
 
 extension ViewController {
     func constraints() {
-        view.addSubview(chooseImageView)
+        view.addSubview(thumbnailImageView)
         NSLayoutConstraint.activate([
-            chooseImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: standardPadding),
-            chooseImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: standardPadding),
-            chooseImageView.heightAnchor.constraint(equalToConstant: thumbnailSize),
-            chooseImageView.widthAnchor.constraint(equalToConstant: thumbnailSize)
+            thumbnailImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: standardPadding),
+            thumbnailImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: standardPadding),
+            thumbnailImageView.heightAnchor.constraint(equalToConstant: thumbnailSize),
+            thumbnailImageView.widthAnchor.constraint(equalToConstant: thumbnailSize)
         ])
         
         view.addSubview(chooseImageLabel)
         NSLayoutConstraint.activate([
-            chooseImageLabel.centerXAnchor.constraint(equalTo: chooseImageView.centerXAnchor),
-            chooseImageLabel.centerYAnchor.constraint(equalTo: chooseImageView.centerYAnchor)
+            chooseImageLabel.centerXAnchor.constraint(equalTo: thumbnailImageView.centerXAnchor),
+            chooseImageLabel.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor)
         ])
         
-        view.addSubview(largerImageView)
+        view.addSubview(mainImageView)
         NSLayoutConstraint.activate([
-            largerImageView.topAnchor.constraint(equalTo: chooseImageView.bottomAnchor, constant: 20),
-            largerImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            largerImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            largerImageView.heightAnchor.constraint(equalToConstant: mainImageSize)
+            mainImageView.topAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor, constant: 20),
+            mainImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            mainImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            mainImageView.heightAnchor.constraint(equalToConstant: mainImageSize)
         ])
     }
 }
@@ -158,8 +163,9 @@ extension ViewController {
 extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let photo = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        chooseImageView.image = photo
-        largerImageView.image = photo
+        thumbnailImageView.image = photo
+        chooseImageLabel.isHidden = true
+        mainImageView.image = photo
         dismiss(animated: true, completion: nil)
     }
 }
