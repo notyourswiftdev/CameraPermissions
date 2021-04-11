@@ -117,7 +117,7 @@ class ViewController: UIViewController {
     // MARK: - Actions -
     @objc func chooseImageAction() {
         checkCameraAuthorization()
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         if mainImageView.image == nil {
             alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (_) in
@@ -137,10 +137,11 @@ class ViewController: UIViewController {
     
     @objc func filterImageAction() {
         if mainImageView.image != nil {
-            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Choose Filter", style: .default, handler: { (_) in
                 print("Open FilterViewController with Image")
             }))
+            alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
