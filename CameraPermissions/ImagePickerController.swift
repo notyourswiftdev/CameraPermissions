@@ -1,5 +1,5 @@
 //
-//  CustomImagePicker.swift
+//  ImagePickerController.swift
 //  CameraPermissions
 //
 //  Created by Aaron Cleveland on 4/11/21.
@@ -8,14 +8,14 @@
 import Foundation
 import UIKit
 
-protocol PickerControllerDelegate: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+protocol ImagePickerControllerDelegate: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func presentCamera()
     func presentGallery()
 }
 
-class CustomImagePicker: UIImagePickerController {
+class ImagePickerController: UIImagePickerController {
     
-    weak var pickerDelegate: PickerControllerDelegate?
+    weak var pickerDelegate: ImagePickerControllerDelegate?
     
     func pickerController(_ sourceType: UIImagePickerController.SourceType) {
         self.sourceType = sourceType

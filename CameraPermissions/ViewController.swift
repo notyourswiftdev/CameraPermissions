@@ -10,7 +10,7 @@ import AVFoundation
 
 class ViewController: UIViewController {
     // MARK: - Properties -
-    let imagePicker = CustomImagePicker()
+    let imagePicker = ImagePickerController()
     
     let thumbnailSize: CGFloat = 80
     let mainImageSize: CGFloat = 200
@@ -98,7 +98,7 @@ class ViewController: UIViewController {
     }
     
     func presentCamera() {
-        if !(CustomImagePicker.isSourceTypeAvailable(.camera)) {
+        if !(ImagePickerController.isSourceTypeAvailable(.camera)) {
             let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -125,15 +125,14 @@ class ViewController: UIViewController {
         checkCameraAuthorization()
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         
-        if mainImageView.image == nil {
-            alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (_) in
-                self.presentCamera()
-            }))
-        } else {
+        if mainImageView.image != nil {
             alert.addAction(UIAlertAction(title: "Choose Filter", style: .default, handler: { (_) in
                 print("Open FilterViewController with Image")
             }))
         }
+        alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (_) in
+            self.presentCamera()
+        }))
         alert.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { (_) in
             self.presentGallery()
         }))
@@ -190,7 +189,7 @@ extension ViewController {
     }
 }
 
-extension ViewController: PickerControllerDelegate {
+extension ViewController: ImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let photo = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         thumbnailImageView.image = photo
