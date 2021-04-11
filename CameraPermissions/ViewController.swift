@@ -97,20 +97,6 @@ class ViewController: UIViewController {
         }
     }
     
-    func presentCamera() {
-        if (UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)) {
-            self.present(imagePicker, animated: true, completion: nil)
-        } else {
-            let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
-    
-    func presentGallery() {
-        self.present(imagePicker, animated: true, completion: nil)
-    }
-    
     func alertCameraAccessNeeded() {
         let settingsAppURL = URL(string: UIApplication.openSettingsURLString)!
         let alert = UIAlertController(title: "Need Camera Access", message: "Camera access is required to make full use of this app.", preferredStyle: .alert)
@@ -192,6 +178,20 @@ extension ViewController {
 }
 
 extension ViewController: PickerControllerDelegate {
+    func presentCamera() {
+        if (UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)) {
+            self.present(imagePicker, animated: true, completion: nil)
+        } else {
+            let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func presentGallery() {
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let photo = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         thumbnailImageView.image = photo
