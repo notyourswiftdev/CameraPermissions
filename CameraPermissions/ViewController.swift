@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     
     let thumbnailSize: CGFloat = 80
     let mainImageSize: CGFloat = 200
+    let standardPadding: CGFloat = 20
     
     lazy var chooseImageLabel: UILabel = {
         let label = UILabel()
@@ -29,6 +30,7 @@ class ViewController: UIViewController {
     lazy var chooseImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
         imageView.isUserInteractionEnabled = true
         imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
@@ -113,7 +115,7 @@ class ViewController: UIViewController {
     // MARK: - Actions -
     @objc func chooseImageAction() {
         checkCameraAuthorization()
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { _ in
             self.openCamera()
         }))
@@ -129,20 +131,18 @@ class ViewController: UIViewController {
 
 extension ViewController {
     func constraints() {
-        view.addSubview(chooseImageLabel)
-        NSLayoutConstraint.activate([
-//            chooseImageLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-//            chooseImageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            chooseImageLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            chooseImageLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 40)
-        ])
-        
         view.addSubview(chooseImageView)
         NSLayoutConstraint.activate([
-            chooseImageView.centerYAnchor.constraint(equalTo: chooseImageLabel.centerYAnchor),
-            chooseImageView.centerXAnchor.constraint(equalTo: chooseImageLabel.centerXAnchor),
+            chooseImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: standardPadding),
+            chooseImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: standardPadding),
             chooseImageView.heightAnchor.constraint(equalToConstant: thumbnailSize),
             chooseImageView.widthAnchor.constraint(equalToConstant: thumbnailSize)
+        ])
+        
+        view.addSubview(chooseImageLabel)
+        NSLayoutConstraint.activate([
+            chooseImageLabel.centerXAnchor.constraint(equalTo: chooseImageView.centerXAnchor),
+            chooseImageLabel.centerYAnchor.constraint(equalTo: chooseImageView.centerYAnchor)
         ])
         
         view.addSubview(largerImageView)
