@@ -38,6 +38,7 @@ class ViewController: UIViewController {
     }()
     
     lazy var pictureSelectionTapGesture = UITapGestureRecognizer(target: self, action: #selector(chooseImageAction))
+    lazy var filterImageSelectionTapGesture = UITapGestureRecognizer(target: self, action: #selector(filterImageAction))
     
     lazy var mainImageView: UIImageView = {
         let imageView = UIImageView()
@@ -60,6 +61,7 @@ class ViewController: UIViewController {
     func configureUI() {
         constraints()
         thumbnailImageView.addGestureRecognizer(pictureSelectionTapGesture)
+        mainImageView.addGestureRecognizer(filterImageSelectionTapGesture)
     }
     
     func checkCameraAuthorization() {
@@ -131,6 +133,16 @@ class ViewController: UIViewController {
         }))
         alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    @objc func filterImageAction() {
+        if mainImageView.image != nil {
+            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Choose Filter", style: .default, handler: { (_) in
+                print("Open FilterViewController with Image")
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }
 
