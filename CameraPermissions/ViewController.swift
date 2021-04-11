@@ -37,8 +37,8 @@ class ViewController: UIViewController {
         return imageView
     }()
     
-    lazy var pictureSelectionTapGesture = UITapGestureRecognizer(target: self, action: #selector(chooseImageAction))
-    lazy var filterImageSelectionTapGesture = UITapGestureRecognizer(target: self, action: #selector(filterImageAction))
+    lazy var pictureSelectionTapGesture = UITapGestureRecognizer(target: self, action: #selector(chooseImageAlertAction))
+    lazy var filterImageSelectionTapGesture = UITapGestureRecognizer(target: self, action: #selector(filterImageAlertAction))
     
     lazy var mainImageView: UIImageView = {
         let imageView = UIImageView()
@@ -50,9 +50,21 @@ class ViewController: UIViewController {
         return imageView
     }()
     
+    lazy var filterButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Filter Image", for: .normal)
+        button.backgroundColor = .red
+        button.layer.cornerRadius = 10
+        button.isHidden = true
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        button.addTarget(self, action: #selector(filterButtonAction), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
         configureUI()
         checkCameraAuthorization()
     }
@@ -115,7 +127,7 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Actions -
-    @objc func chooseImageAction() {
+    @objc func chooseImageAlertAction() {
         checkCameraAuthorization()
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
@@ -135,7 +147,7 @@ class ViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    @objc func filterImageAction() {
+    @objc func filterImageAlertAction() {
         if mainImageView.image != nil {
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Choose Filter", style: .default, handler: { (_) in
@@ -144,6 +156,10 @@ class ViewController: UIViewController {
             alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    @objc func filterButtonAction() {
+        print("Open FilterViewController with Image")
     }
 }
 
@@ -170,6 +186,13 @@ extension ViewController {
             mainImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             mainImageView.heightAnchor.constraint(equalToConstant: mainImageSize)
         ])
+        
+        view.addSubview(filterButton)
+        NSLayoutConstraint.activate([
+            filterButton.topAnchor.constraint(equalTo: mainImageView.bottomAnchor, constant: standardPadding),
+            filterButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: standardPadding),
+            filterButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -standardPadding)
+        ])
     }
 }
 
@@ -177,8 +200,10 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let photo = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         thumbnailImageView.image = photo
-        chooseImageLabel.isHidden = true
         mainImageView.image = photo
+        
+        chooseImageLabel.isHidden = true
+        filterButton.isHidden = false
         dismiss(animated: true, completion: nil)
     }
 }
