@@ -10,7 +10,7 @@ import AVFoundation
 
 class ViewController: UIViewController {
     // MARK: - Properties -
-    let imagePicker = UIImagePickerController()
+    let imagePicker = CustomImagePicker()
     
     let thumbnailSize: CGFloat = 80
     let mainImageSize: CGFloat = 200
@@ -97,6 +97,20 @@ class ViewController: UIViewController {
         }
     }
     
+    func presentCamera() {
+        if (CustomImagePicker.isSourceTypeAvailable(.camera)) {
+            self.present(imagePicker, animated: true, completion: nil)
+        } else {
+            let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func presentGallery() {
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
     func alertCameraAccessNeeded() {
         let settingsAppURL = URL(string: UIApplication.openSettingsURLString)!
         let alert = UIAlertController(title: "Need Camera Access", message: "Camera access is required to make full use of this app.", preferredStyle: .alert)
@@ -110,7 +124,7 @@ class ViewController: UIViewController {
     // MARK: - Actions -
     @objc func chooseImageAlertAction() {
         checkCameraAuthorization()
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         
         if mainImageView.image == nil {
             alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (_) in
@@ -130,7 +144,7 @@ class ViewController: UIViewController {
     
     @objc func filterImageAlertAction() {
         if mainImageView.image != nil {
-            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Choose Filter", style: .default, handler: { (_) in
                 print("Open FilterViewController with Image")
             }))
@@ -178,20 +192,6 @@ extension ViewController {
 }
 
 extension ViewController: PickerControllerDelegate {
-    func presentCamera() {
-        if (UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)) {
-            self.present(imagePicker, animated: true, completion: nil)
-        } else {
-            let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
-    
-    func presentGallery() {
-        self.present(imagePicker, animated: true, completion: nil)
-    }
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let photo = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         thumbnailImageView.image = photo
