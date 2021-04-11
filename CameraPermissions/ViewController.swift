@@ -98,13 +98,12 @@ class ViewController: UIViewController {
     }
     
     func presentCamera() {
-        if (CustomImagePicker.isSourceTypeAvailable(.camera)) {
-            self.present(imagePicker, animated: true, completion: nil)
-        } else {
+        if !(CustomImagePicker.isSourceTypeAvailable(.camera)) {
             let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+        self.present(imagePicker, animated: true, completion: nil)
     }
     
     func presentGallery() {
