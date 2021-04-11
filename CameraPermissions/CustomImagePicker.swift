@@ -9,25 +9,26 @@ import Foundation
 import UIKit
 
 protocol PickerControllerDelegate: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func presentGallery()
     func presentCamera()
+    func presentGallery()
 }
 
 class CustomImagePicker: UIImagePickerController {
     
     weak var pickerDelegate: PickerControllerDelegate?
     
-    func openGallery() {
-        self.sourceType = .photoLibrary
-        self.allowsEditing = false
-        pickerDelegate?.presentGallery()
+    func pickerController(_ sourceType: UIImagePickerController.SourceType) {
+        self.sourceType = sourceType
+        allowsEditing = false
         self.delegate = pickerDelegate
-    }
-    
-    func openCamera() {
-        self.sourceType = .camera
-        self.allowsEditing = false
-        pickerDelegate?.presentCamera()
-        self.delegate = pickerDelegate
+        
+        switch sourceType {
+        case .camera:
+            pickerDelegate?.presentCamera()
+        case .photoLibrary:
+            pickerDelegate?.presentGallery()
+        default:
+            break
+        }
     }
 }
