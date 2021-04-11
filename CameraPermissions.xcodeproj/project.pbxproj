@@ -12,6 +12,7 @@
 		1A5A6462261E8A640007998E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A6461261E8A640007998E /* ViewController.swift */; };
 		1A5A6467261E8A650007998E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A6466261E8A650007998E /* Assets.xcassets */; };
 		1A5A646A261E8A650007998E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A6468261E8A650007998E /* LaunchScreen.storyboard */; };
+		1AF23D8D2622D4A000FBCCC5 /* CustomImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF23D8C2622D4A000FBCCC5 /* CustomImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		1A5A6466261E8A650007998E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A5A6469261E8A650007998E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1A5A646B261E8A650007998E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1AF23D8C2622D4A000FBCCC5 /* CustomImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +56,23 @@
 		1A5A645C261E8A640007998E /* CameraPermissions */ = {
 			isa = PBXGroup;
 			children = (
+				1ACBCA692622D43B00E8FA87 /* Resources */,
+				1A5A6461261E8A640007998E /* ViewController.swift */,
+				1AF23D8C2622D4A000FBCCC5 /* CustomImagePicker.swift */,
+			);
+			path = CameraPermissions;
+			sourceTree = "<group>";
+		};
+		1ACBCA692622D43B00E8FA87 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
 				1A5A645D261E8A640007998E /* AppDelegate.swift */,
 				1A5A645F261E8A640007998E /* SceneDelegate.swift */,
-				1A5A6461261E8A640007998E /* ViewController.swift */,
 				1A5A6466261E8A650007998E /* Assets.xcassets */,
 				1A5A6468261E8A650007998E /* LaunchScreen.storyboard */,
 				1A5A646B261E8A650007998E /* Info.plist */,
 			);
-			path = CameraPermissions;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,6 +146,7 @@
 			files = (
 				1A5A6462261E8A640007998E /* ViewController.swift in Sources */,
 				1A5A645E261E8A640007998E /* AppDelegate.swift in Sources */,
+				1AF23D8D2622D4A000FBCCC5 /* CustomImagePicker.swift in Sources */,
 				1A5A6460261E8A640007998E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,7 +288,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7G4A2JWWKQ;
-				INFOPLIST_FILE = CameraPermissions/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/CameraPermissions/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -296,7 +308,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7G4A2JWWKQ;
-				INFOPLIST_FILE = CameraPermissions/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/CameraPermissions/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

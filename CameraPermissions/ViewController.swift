@@ -9,7 +9,6 @@ import UIKit
 import AVFoundation
 
 class ViewController: UIViewController {
-    
     // MARK: - Properties -
     let imagePicker = UIImagePickerController()
     
@@ -67,6 +66,8 @@ class ViewController: UIViewController {
         view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
         configureUI()
         checkCameraAuthorization()
+        
+        imagePicker.delegate = self
     }
     
     // MARK: - Helper Functions -
@@ -96,11 +97,8 @@ class ViewController: UIViewController {
         }
     }
     
-    func openCamera() {
+    func presentCamera() {
         if (UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)) {
-            imagePicker.sourceType = .camera
-            imagePicker.allowsEditing = false
-            imagePicker.delegate = self
             self.present(imagePicker, animated: true, completion: nil)
         } else {
             let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
@@ -109,10 +107,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func openGallary() {
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.allowsEditing = false
-        imagePicker.delegate = self
+    func presentGallery() {
         self.present(imagePicker, animated: true, completion: nil)
     }
     
@@ -133,7 +128,7 @@ class ViewController: UIViewController {
         
         if mainImageView.image == nil {
             alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (_) in
-                self.openCamera()
+                self.presentCamera()
             }))
         } else {
             alert.addAction(UIAlertAction(title: "Choose Filter", style: .default, handler: { (_) in
@@ -141,7 +136,7 @@ class ViewController: UIViewController {
             }))
         }
         alert.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { (_) in
-            self.openGallary()
+            self.presentGallery()
         }))
         alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
@@ -196,7 +191,7 @@ extension ViewController {
     }
 }
 
-extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension ViewController: PickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let photo = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         thumbnailImageView.image = photo
