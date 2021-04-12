@@ -11,6 +11,7 @@ import AVFoundation
 class ViewController: UIViewController {
     // MARK: - Properties -
     let imagePicker = ImagePickerController()
+    let filterImageViewController = FilterImageViewController()
     
     let thumbnailSize: CGFloat = 80
     let mainImageSize: CGFloat = 200
@@ -67,7 +68,19 @@ class ViewController: UIViewController {
         configureUI()
         checkCameraAuthorization()
         
-        imagePicker.delegate = self
+        imagePicker.pickerDelegate = self
+    }
+    
+    // Remove navigation bar
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    // Adds navigation when view is disappeared
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     // MARK: - Helper Functions -
@@ -98,16 +111,15 @@ class ViewController: UIViewController {
     }
     
     func presentCamera() {
-        if !(ImagePickerController.isSourceTypeAvailable(.camera)) {
-            let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
         self.present(imagePicker, animated: true, completion: nil)
     }
     
     func presentGallery() {
         self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func presentFilterImageViewController() {
+        navigationController?.pushViewController(self.filterImageViewController, animated: true)
     }
     
     func alertCameraAccessNeeded() {
@@ -127,14 +139,26 @@ class ViewController: UIViewController {
         
         if mainImageView.image != nil {
             alert.addAction(UIAlertAction(title: "Choose Filter", style: .default, handler: { (_) in
-                print("Open FilterViewController with Image")
+                self.presentFilterImageViewController()
             }))
         }
         alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (_) in
-            self.presentCamera()
+            if !ImagePickerController.isSourceTypeAvailable(.camera) {
+                let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                self.imagePicker.pickerController(.camera)
+            }
         }))
         alert.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { (_) in
-            self.presentGallery()
+            if !ImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                let alert = UIAlertController(title: "Warning", message: "We can't access your photo library", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            } else {
+                self.imagePicker.pickerController(.photoLibrary)
+            }
         }))
         alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
@@ -144,7 +168,7 @@ class ViewController: UIViewController {
         if mainImageView.image != nil {
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Choose Filter", style: .default, handler: { (_) in
-                print("Open FilterViewController with Image")
+                self.presentFilterImageViewController()
             }))
             alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -152,7 +176,7 @@ class ViewController: UIViewController {
     }
     
     @objc func filterButtonAction() {
-        print("Open FilterViewController with Image")
+        self.presentFilterImageViewController()
     }
 }
 
