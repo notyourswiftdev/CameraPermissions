@@ -33,7 +33,7 @@ extension UIImage {
         let cgImage = ciContext.createCGImage(ciOutput!, from: (ciOutput?.extent)!)
         
         // Return image
-        return UIImage(cgImage: cgImage!)
+        return UIImage(cgImage: cgImage!, scale: self.scale, orientation: self.imageOrientation)
     }
 }
 
