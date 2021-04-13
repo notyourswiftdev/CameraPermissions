@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  HomeViewController.swift
 //  CameraPermissions
 //
 //  Created by Aaron Cleveland on 4/7/21.
@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-class ViewController: UIViewController {
+class HomeViewController: UIViewController {
     // MARK: - Properties -
     let imagePicker = ImagePickerController()
     let filterImageViewController = FilterImageViewController()
@@ -119,6 +119,7 @@ class ViewController: UIViewController {
     }
     
     func presentFilterImageViewController() {
+        filterImageViewController.filterImageView.image = mainImageView.image
         navigationController?.pushViewController(self.filterImageViewController, animated: true)
     }
     
@@ -180,7 +181,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController {
+extension HomeViewController {
     func constraints() {
         view.addSubview(thumbnailImageView)
         NSLayoutConstraint.activate([
@@ -201,7 +202,7 @@ extension ViewController {
             mainImageView.topAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor, constant: 20),
             mainImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             mainImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            mainImageView.heightAnchor.constraint(equalToConstant: mainImageSize)
+            mainImageView.heightAnchor.constraint(equalToConstant: view.frame.height / 2)
         ])
         
         view.addSubview(filterButton)
@@ -213,7 +214,7 @@ extension ViewController {
     }
 }
 
-extension ViewController: ImagePickerControllerDelegate {
+extension HomeViewController: ImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let photo = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         thumbnailImageView.image = photo
