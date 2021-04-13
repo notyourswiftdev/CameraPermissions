@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A27497E262615B500237C3B /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A27497D262615B500237C3B /* PhotosCollectionViewCell.swift */; };
 		1A5A645E261E8A640007998E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A645D261E8A640007998E /* AppDelegate.swift */; };
 		1A5A6460261E8A640007998E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A645F261E8A640007998E /* SceneDelegate.swift */; };
 		1A5A6462261E8A640007998E /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A6461261E8A640007998E /* HomeViewController.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A27497D262615B500237C3B /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 		1A5A645A261E8A640007998E /* CameraPermissions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraPermissions.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A5A645D261E8A640007998E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A5A645F261E8A640007998E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				1AF23D8C2622D4A000FBCCC5 /* ImagePickerController.swift */,
 				1AF23D902623E69300FBCCC5 /* FilterImageViewController.swift */,
 				1AFEAA9726253D080019ABD9 /* UIImage+Extension.swift */,
+				1A27497D262615B500237C3B /* PhotosCollectionViewCell.swift */,
 			);
 			path = CameraPermissions;
 			sourceTree = "<group>";
@@ -151,6 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A5A6462261E8A640007998E /* HomeViewController.swift in Sources */,
+				1A27497E262615B500237C3B /* PhotosCollectionViewCell.swift in Sources */,
 				1AF23D912623E69300FBCCC5 /* FilterImageViewController.swift in Sources */,
 				1A5A645E261E8A640007998E /* AppDelegate.swift in Sources */,
 				1AFEAA9826253D080019ABD9 /* UIImage+Extension.swift in Sources */,

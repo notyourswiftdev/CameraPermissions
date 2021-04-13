@@ -8,11 +8,13 @@
 import UIKit
 import AVFoundation
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, UIGestureRecognizerDelegate {
     
     // MARK: - PROPERTIES -
     let imagePicker = ImagePickerController()
     let filterImageViewController = FilterImageViewController()
+    
+    var stockImagesArray = (0...30).compactMap { (UIImage(named: "pic\($0)"))}
     
     let thumbnailSize: CGFloat = 80
     let mainImageSize: CGFloat = 200
@@ -25,8 +27,9 @@ class HomeViewController: UIViewController {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
         collectionView.backgroundColor = .clear
+        collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
     
@@ -83,10 +86,11 @@ class HomeViewController: UIViewController {
     
     // MARK: - HELPER FUNCTIONS -
     func configureUI() {
-        view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
+        view.backgroundColor = UIColor(named: "Background")
         constraints()
         checkCameraAuthorization()
         delegates()
+        configureLongPressGesture()
     }
     
     func delegates() {
@@ -140,6 +144,15 @@ class HomeViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    // MARK: - UIGestures -
+    private func configureLongPressGesture() {
+        let longPressedGesture = UILongPressGestureRecognizer(target: self, action: #selector(photosCellLongPressGesture(gestureRecognizer:)))
+        longPressedGesture.minimumPressDuration = 0.5
+        longPressedGesture.delegate = self
+        longPressedGesture.delaysTouchesBegan = true
+        photoCollectionView.addGestureRecognizer(longPressedGesture)
+    }
+    
     // MARK: - ACTIONS -
     @objc func chooseImageButtonAction() {
         checkCameraAuthorization()
@@ -169,6 +182,17 @@ class HomeViewController: UIViewController {
     
     @objc func filterButtonAction() {
         self.presentFilterImageViewController()
+    }
+    
+    @objc func photosCellLongPressGesture(gestureRecognizer: UILongPressGestureRecognizer) {
+        if (gestureRecognizer.state != .began) {
+            return
+        }
+        
+        let loc = gestureRecognizer.location(in: photoCollectionView)
+        if let indexPath = photoCollectionView.indexPathForItem(at: loc) {
+            mainImageView.image = stockImagesArray[indexPath.item]
+        }
     }
 }
 
@@ -218,17 +242,22 @@ extension HomeViewController: ImagePickerControllerDelegate {
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return stockImagesArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .darkGray
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
+        let stockImage = stockImagesArray[indexPath.item]
+        DispatchQueue.main.async {
+            cell.thumbnailImageView.image = stockImage
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("ENLARGE IMAGE")
+        // Replace with a guard let if we use network calls, right now we have the images in the assets folder.
+        mainImageView.image = stockImagesArray[indexPath.item]
+        filterButton.isHidden = false
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
